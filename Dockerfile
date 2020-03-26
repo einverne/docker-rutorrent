@@ -24,6 +24,7 @@ RUN \
 	fcgi \
 	ffmpeg \
 	geoip \
+	git \
 	gzip \
 	libffi \
 	mediainfo \
@@ -39,6 +40,7 @@ RUN \
 	screen \
 	sox \
 	unrar \
+	unzip \
 	zip && \
  echo "**** install pip packages ****" && \
  pip3 install --no-cache-dir -U \
@@ -58,12 +60,18 @@ RUN \
  tar xf \
  /tmp/rutorrent.tar.gz -C \
 	/app/rutorrent --strip-components=1 && \
+ echo "**** install plugins ****" && \
+ git clone https://github.com/xombiemp/rutorrentMobile.git /app/rutorrent/plugins/mobile && \
+ git clone https://github.com/nelu/rutorrent-filemanager.git /app/rutorrent/plugins/filemanager && \
+ git clone https://github.com/nelu/rutorrent-filemanager-media.git /app/rutorrent/plugins/filemanager-media && \
  echo "**** install themes ****" && \
  curl -o /tmp/material-design.tar.gz -L \
      "https://github.com/themightykitten/ruTorrent-MaterialDesign/archive/master.tar.gz" && \
  mkdir -p /app/rutorrent/plugins/theme/themes/MaterialDesign && \
  tar xf /tmp/material-design.tar.gz -C \
     /app/rutorrent/plugins/theme/themes/MaterialDesign --strip-components=1 && \
+ sed -i 's/defaultTheme = ""/defaultTheme = "MaterialDesign"/' /app/rutorrent/plugins/theme/conf.php && \
+ echo "**** end themes ****" && \
  mv /app/rutorrent/conf/* \
 	/defaults/rutorrent-conf/ && \
  rm -rf \
